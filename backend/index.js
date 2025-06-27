@@ -12,6 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get('/', (req, res) => {
+    res.send('🚀 Quote Keeper Backend is Live');
+  });
+
+  
 app.get('/quotes', (req, res) => {
   res.json(quotes);
 });

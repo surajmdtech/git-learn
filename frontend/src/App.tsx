@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 // Define the Quote type
 type Quote = {
@@ -15,7 +16,7 @@ function App() {
 
   // Fetch all quotes
   useEffect(() => {
-    fetch('http://localhost:5000/quotes')
+    fetch(`${API_BASE}/quotes`)
       .then((res) => res.json())
       .then((data: Quote[]) => setQuotes(data))
       .catch((err) => console.error('Failed to fetch quotes:', err));
@@ -27,7 +28,7 @@ function App() {
     if (!author || !text) return;
 
     try {
-      const res = await fetch('http://localhost:5000/quotes', {
+      const res = await fetch(`${API_BASE}/quotes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ author, text }),

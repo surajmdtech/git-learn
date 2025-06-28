@@ -1,4 +1,4 @@
-name: 🚀 Deploy Backend to Render via API
+name: 🚀 Build + Deploy Backend to Render
 
 on:
   push:
@@ -8,13 +8,34 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
-      - name: 📤 Trigger Deploy on Render
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: ✅ Lint (optional)
+        run: npm run lint || echo "Skipping lint"
+
+      - name: 🧪 Run Tests (optional)
+        run: npm test 
+
+      - name: 🚀 Deploy to Render
         run: |
           curl -X POST https://api.render.com/v1/services/srv-d1f95vidbo4c739oq290/deploys \
-            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{}'
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{}'
